@@ -21,9 +21,9 @@ public:
 	Variable operator|(const Variable& v);
 	Variable operator^(const Variable& v);
 	Variable operator~();
-	Variable operator<<(Variable& v);
-	Variable operator>>(Variable& v);
-	const long long int GetDataToInteger();
+	Variable operator<<(const Variable& v);
+	Variable operator>>(const Variable& v);
+	const long long int GetDataToInteger() const;
 	void PrintRaw();
 };
 

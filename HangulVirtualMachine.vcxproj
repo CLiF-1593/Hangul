@@ -139,10 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Encoder.cpp" />
+    <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="MemorySystem.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code.h" />
+    <ClInclude Include="Encoder.h" />
+    <ClInclude Include="Interpreter.h" />
     <ClInclude Include="MemorySystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

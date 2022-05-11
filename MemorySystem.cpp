@@ -3,7 +3,8 @@
 using namespace std;
 
 void Variable::SetDataSize(int size) {
-	for (int i = 0; i < size - this->data.size(); i++) {
+	int cnt = size - (int)(this->data.size());
+	for (int i = 0; i < cnt; i++) {
 		this->data.insert(this->data.begin(), this->data.front());
 	}
 }
@@ -104,20 +105,30 @@ Variable Variable::operator~() {
 	return var;
 }
 
-Variable Variable::operator<<(Variable& v) {
+Variable Variable::operator<<(const Variable& v) {
 	for (int i = 0; i < v.GetDataToInteger(); i++) {
 		this->data.push_back(this->data.front());
 	}
-	return Variable();
+	return *this;
 }
 
-Variable Variable::operator>>(Variable& v) {
-	return Variable();
+Variable Variable::operator>>(const Variable& v) {
+	auto len = v.GetDataToInteger();
+	if (this->data.size() <= v.GetDataToInteger()) {
+		this->data.clear();
+		this->data.push_back(0);
+	}
+	else {
+		for (int i = 0; i < v.GetDataToInteger(); i++) {
+			this->data.pop_back();
+		}
+	}
+	return *this;
 }
 
 
 
-const long long int Variable::GetDataToInteger() {
+const long long int Variable::GetDataToInteger() const {
 	long long int data = 0;
 	bool sign = this->data.front();
 	for (int i = 1; i < this->data.size(); i++) {
