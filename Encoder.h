@@ -5,7 +5,7 @@
 
 class Encoder {
 private:
-	void Translate(Code& code, CodeString cmd);
+	void Translate(Command &code, CodeString src);
 
 public:
 	void EncodeFile(string loc, Code &code);

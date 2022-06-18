@@ -4,21 +4,22 @@
 #include <codecvt>
 #include <map>
 
-void Encoder::Translate(Code& code, CodeString cmd) {
+void Encoder::Translate(Command &cmd, CodeString src) {
 	//analysis
 	Factor factor;
-	factor.type = BGN;
-	factor.data = L"NL";
+	factor.type = NUL;
 	wstring function_name;
-	for (int i = 0; i < cmd.size(); i++) {
-		if (word_table.find(cmd[i]) != word_table.end()) {
-			Factor t = word_table[cmd[i]];
+	for (int i = 0; i < src.size(); i++) {
+		if (word_table.find(src[i]) != word_table.end()) {
+			Factor t = word_table[src[i]];
 			if (factor.type != t.type) {
-				code.push_back(factor);
-				if (factor.type == FTN && !function_name.empty()) {
-					factor.data = function_name;
-					code.push_back(factor);
-					function_name.clear();
+				if (factor.type) {
+					cmd.push_back(factor);
+					if (factor.type == FTN && !function_name.empty()) {
+						factor.data = function_name;
+						cmd.push_back(factor);
+						function_name.clear();
+					}
 				}
 				factor.type = t.type;
 				factor.data = t.data;
@@ -28,16 +29,18 @@ void Encoder::Translate(Code& code, CodeString cmd) {
 			}
 		}
 		else if(factor.type == FTN) {
-			function_name += cmd[i];
+			function_name += src[i];
 		}
 		else {
-			code.push_back(factor);
+			if (factor.type) {
+				cmd.push_back(factor);
+			}
 			factor.type = FTN;
 			factor.data.clear();
-			function_name = cmd[i];
+			function_name = src[i];
 		}
 	}
-	code.push_back(factor);
+	cmd.push_back(factor);
 }
 
 void Encoder::EncodeFile(string loc, Code& code) {
@@ -47,31 +50,36 @@ void Encoder::EncodeFile(string loc, Code& code) {
 	wss << wif.rdbuf();
 	CodeString raw = wss.str();
 
-	CodeString cmd;
+	CodeString src;
+	Command cmd;
 	for (int i = 0; i < raw.size(); i++) {
 		CodeUnit c = raw[i];
 		if (c == ' ' || c == '\n') {
-			if (!cmd.empty()) {
-				this->Translate(code, cmd);
+			if (!src.empty()) {
+				this->Translate(cmd, src);
+				src.clear();
+				code.push_back(cmd);
 				cmd.clear();
 			}
 		}
 		else {
-			cmd += c;
+			src += c;
 		}
 	}
-	if (!cmd.empty()) {
-		this->Translate(code, cmd);
+	if (!src.empty()) {
+		this->Translate(cmd, src);
+		src.clear();
+		code.push_back(cmd);
 		cmd.clear();
 	}
 }
 
 void Encoder::PrintRawCode(Code& code) {
 	for (int i = 0; i < code.size(); i++) {
-		if (code[i].type == BGN) {
-			cout << endl;
+		for (int j = 0; j < code[i].size(); j++) {
+			wcout << "[" << code[i][j].type << ":" << code[i][j].data << "]";
 		}
-		wcout << "[" << code[i].type << ":" << code[i].data << "]";
+		cout << endl;
 	}
 }
 

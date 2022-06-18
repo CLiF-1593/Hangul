@@ -4,7 +4,7 @@
 #include <map>
 using namespace std;
 
-enum FactorType { NUM, VAR, LST, PSH, OPR, GTO, BSZ, FTN, BGN }; //number, variable, list, push, operator, goto, bit size, function, line start
+enum FactorType { NUL, NUM, VAR, LST, PSH, OPR, GTO, BSZ, FTN }; //number, variable, list, push, operator, goto, bit size, function
 typedef wstring FactorData;
 
 struct Factor {
@@ -12,7 +12,8 @@ struct Factor {
 	FactorData data;
 };
 
-typedef vector<Factor> Code;
+typedef vector<Factor> Command;
+typedef vector<Command> Code;
 
 typedef wstring CodeString;
 typedef wchar_t CodeUnit;
