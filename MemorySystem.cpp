@@ -49,6 +49,30 @@ Variable::Variable(const Variable& v) {
 	this->data = v.data;
 }
 
+Variable::Variable(CodeString data) {
+	this->data.clear();
+	for (int i = 0; i < data.size(); i++) {
+		if (data[i] == '0') {
+			this->data.push_back(false);
+		}
+		else if (data[i] == '1') {
+			this->data.push_back(true);
+		}
+	}
+}
+
+Variable::Variable(string data) {
+	this->data.clear();
+	for (int i = 0; i < data.size(); i++) {
+		if (data[i] == '0') {
+			this->data.push_back(false);
+		}
+		else if (data[i] == '1') {
+			this->data.push_back(true);
+		}
+	}
+}
+
 Variable Variable::operator=(const Variable& v) {
 	this->data.clear();
 	this->data = v.data;
@@ -92,38 +116,37 @@ Variable Variable::operator^(const Variable& v) {
 }
 
 Variable Variable::operator~() {
-	bool change = false;
 	Variable var = *this;
 	for (int i = var.data.size() - 1; i >= 0; i--) {
-		if (change) {
-			var.data[i] = !var.data[i];
-		}
-		else if (var.data[i]) {
-			change = true;
-		}
+		var.data[i] = !var.data[i];
 	}
 	return var;
 }
 
 Variable Variable::operator<<(const Variable& v) {
+	bool change = false;
+	Variable var = *this;
 	for (int i = 0; i < v.GetDataToInteger(); i++) {
-		this->data.push_back(this->data.front());
+		var.data.push_back(var.data.front());
 	}
-	return *this;
+	return var;
 }
 
 Variable Variable::operator>>(const Variable& v) {
 	auto len = v.GetDataToInteger();
-	if (this->data.size() <= v.GetDataToInteger()) {
-		this->data.clear();
-		this->data.push_back(0);
+	bool change = false;
+	Variable var = *this;
+	var.SetDataSize(this->data.size());
+	if (var.data.size() <= v.GetDataToInteger()) {
+		var.data.clear();
+		var.data.push_back(0);
 	}
 	else {
 		for (int i = 0; i < v.GetDataToInteger(); i++) {
-			this->data.pop_back();
+			var.data.pop_back();
 		}
 	}
-	return *this;
+	return var;
 }
 
 
@@ -140,6 +163,28 @@ const long long int Variable::GetDataToInteger() const {
 		data -= 1;
 	}
 	return data;
+}
+
+const CodeString Variable::GetDataToCodeString() const {
+	CodeString c;
+	for (int i = 0; i < this->data.size(); i++) {
+		if (this->data[i]) {
+			c.push_back('1');
+		}
+		else {
+			c.push_back('0');
+		}
+	}
+	return c;
+}
+
+const bool Variable::GetBoolean() const {
+	for (int i = 0; i < this->data.size(); i++) {
+		if (this->data[i]) {
+			return true;
+		}
+	}
+	return false;
 }
 
 void Variable::PrintRaw() {

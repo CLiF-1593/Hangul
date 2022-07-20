@@ -12,35 +12,48 @@ void Encoder::Translate(Command &cmd, CodeString src) {
 	for (int i = 0; i < src.size(); i++) {
 		if (word_table.find(src[i]) != word_table.end()) {
 			Factor t = word_table[src[i]];
-			if (factor.type != t.type) {
+			if (factor.type == FTN_NAME) {
+				factor.type = t.type;
+				factor.data = t.data;
+				cmd.push_back(factor);
+				if (!function_name.empty()) {
+					factor.type = FTN_NAME;
+					factor.data = function_name;
+					cmd.push_back(factor);
+					function_name.clear();
+				}
+				factor.type = NUL;
+			}
+			else if (factor.type != t.type || factor.type == OPR) {
 				if (factor.type) {
 					cmd.push_back(factor);
-					if (factor.type == FTN && !function_name.empty()) {
-						factor.data = function_name;
-						cmd.push_back(factor);
-						function_name.clear();
-					}
 				}
 				factor.type = t.type;
 				factor.data = t.data;
+				if (factor.type == FTN) {
+					cmd.push_back(factor);
+					factor.type = NUL;
+				}
 			}
 			else {
 				factor.data += t.data;
 			}
 		}
-		else if(factor.type == FTN) {
+		else if(factor.type == FTN_NAME) {
 			function_name += src[i];
 		}
 		else {
-			if (factor.type) {
+			if (factor.type && factor.type != FTN) {
 				cmd.push_back(factor);
 			}
-			factor.type = FTN;
+			factor.type = FTN_NAME;
 			factor.data.clear();
 			function_name = src[i];
 		}
 	}
-	cmd.push_back(factor);
+	if (factor.type) {
+		cmd.push_back(factor);
+	}
 }
 
 void Encoder::EncodeFile(string loc, Code& code) {
@@ -95,8 +108,8 @@ map<CodeUnit, Factor> word_table = {
 	{ L'ぜ',		{OPR, L"|"} },
 	{ L'さ',		{OPR, L"^"} },
 	{ L'い',		{OPR, L"~"} },
-	{ L'そ',		{OPR, L"<"} },
-	{ L'ず',		{OPR, L">"} },
+	{ L'そ',		{OPR, L"<<"} },
+	{ L'ず',		{OPR, L">>"} },
 	{ L'ぁ',		{GTO, L"G"} },
 	{ L'?',		{BSZ, L"S"} },
 	{ L'!',		{FTN, L"F"} },

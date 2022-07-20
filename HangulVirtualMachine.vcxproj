@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Encoder.cpp" />
+    <ClCompile Include="ErrorSystem.cpp" />
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="MemorySystem.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="Code.h" />
     <ClInclude Include="Encoder.h" />
+    <ClInclude Include="ErrorSystem.h" />
     <ClInclude Include="Interpreter.h" />
     <ClInclude Include="MemorySystem.h" />
   </ItemGroup>
