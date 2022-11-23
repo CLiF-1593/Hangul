@@ -3,6 +3,8 @@
 #include <string>
 using namespace std;
 
+int err_line = -1;
+
 const string err_msg[] = {
 	/*00*/	"The index is missing from the list",
 	/*01*/	"The function does not have name",
@@ -20,7 +22,7 @@ const string err_msg[] = {
 
 void InterpreterError(int err_code, int line) {
 	cout << "Error [Interpreter]" << " ";
-	cout << "(error code = " << err_code << ", line = "<< line << ") : ";
+	cout << "(error code = " << err_code << ", line = "<< (line == -1 ? err_line : line) << ") : ";
 	cout << err_msg[err_code] << endl;
 	system("pause");
 	exit(EXIT_FAILURE);

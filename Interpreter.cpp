@@ -6,6 +6,12 @@
 #include <cstdio>
 #include <queue>
 
+extern int err_line;
+
+//#define LOC L"D:\\Development\\ProgrammingProject\\Tool\\Hangul\\ExternalFunctions\\PreFunctionSets\\"
+//#define LOC wstring(_wgetenv(L"APPDATA")) + L"\\Hangul\\ExternalFunctions\\"
+#define LOC L"ExternalFunctions\\"
+
 map<CodeString, int> oper_priority = {
 	{L"<<", 0},
 	{L">>", 0},
@@ -14,26 +20,33 @@ map<CodeString, int> oper_priority = {
 	{L"|", 1},
 };
 
-Value Interpreter::GetValue(Command& cmd, int pos) {
+Value Interpreter::GetValue(Command& cmd, int &pos) {
 	int index = 0;
+	vector<Variable>* lst;
 	switch (cmd[pos].type) {
 	case VAR:
 		return { &this->var[cmd[pos].data], true };
 		break;
 	case LST:
-		if (pos < cmd.size() - 1) {
+		if (pos > cmd.size() - 1) {
 			InterpreterError(0);
 		}
 		else if (cmd[pos + 1].type == NUM) {
 			index = Variable(cmd[pos + 1].data).GetDataToInteger();
 		}
-		else if (cmd[pos + 1].type == VAR || cmd[pos + 1].type == LST) {
-			index = GetValue(cmd, pos + 1).var->GetDataToInteger();
+		else if (cmd[pos + 1].type == VAR) {
+			int p = pos + 1;
+			index = GetValue(cmd, p).var->GetDataToInteger();
 		}
 		else {
 			InterpreterError(0);
 		}
-		return { &this->lst[cmd[pos].data][index], true };
+		lst = &this->lst[cmd[pos].data];
+		while (lst->size() <= index) {
+			lst->push_back(0);
+		}
+		pos++;
+		return { &(*lst)[index], true };
 	case NUM:
 		Variable* var = new Variable(cmd[pos].data);
 		return  { var, false };
@@ -59,9 +72,7 @@ Value Interpreter::Function(Command &cmd, int &pos) {
 				auto ftn = Function(cmd, i);
 				factor.data = ftn.var->GetDataToCodeString();
 				delete ftn.var;
-				Command cmd;
-				cmd.push_back(factor);
-				parameter.push_back(cmd);
+				part_cmd.push_back(factor);
 				continue;
 			}
 			else {
@@ -97,7 +108,7 @@ Value Interpreter::Function(Command &cmd, int &pos) {
 	}*/
 
 	//Function Execute ...
-	wstring loc = L"D:\\Development\\ProgrammingProject\\Tool\\Hangul\\ExternalFunctions\\PreFunctionSets\\";
+	wstring loc = LOC;
 	loc += name + L' ';
 	for (int i = 0; i < parameter.size(); i++) {
 		int line = 0;
@@ -114,6 +125,7 @@ Value Interpreter::Function(Command &cmd, int &pos) {
 		}
 		else {
 			auto ret = this->ExecuteLine(parameter[i], line);
+			
 			loc += ret.var->GetDataToCodeString();
 			if (!ret.memory) {
 				delete ret.var;
@@ -122,8 +134,6 @@ Value Interpreter::Function(Command &cmd, int &pos) {
 		loc += L' ';
 	}
 
-	//wcout << loc;
-	//_wsystem(loc.c_str());
 	FILE* func;
 	func = _wpopen(loc.c_str(), L"r");
 	wstring output;
@@ -152,11 +162,14 @@ Value Interpreter::Function(Command &cmd, int &pos) {
 	wstring data;
 	bool get_ret = false;
 	ret += L" ";
+	int var_cnt = 0;
+	int lst_cnt = 0;
 	for (int i = 0; i < ret.size(); i++) {
 		if (ret[i] == L' ') {
 			if (!get_ret) {
 				get_ret = true;
-			*(ret_v.var) = data;
+				*(ret_v.var) = data;
+				data.clear();
 			}
 			else if (data[0] == L'[') {
 				vector<Variable> in;
@@ -170,9 +183,44 @@ Value Interpreter::Function(Command &cmd, int &pos) {
 						s += data[i];
 					}
 				}
+				in.push_back(s);
+				s.clear();
+
+				int cnt = 0;
+				for (int j = 0; j < parameter.size(); j++) {
+					int line = 0;
+					if ((parameter[j].size() == 1 && parameter[j][0].type == LST)) {
+						if (cnt == lst_cnt) {
+							auto ret = &this->lst[parameter[j][0].data];
+							*ret = in;
+							lst_cnt++;
+							break;
+						}
+						cnt++;
+					}
+				}
+				data.clear();
 			}
 			else {
-
+				int cnt = 0;
+				for (int j = 0; j < parameter.size(); j++) {
+					int line = 0;
+					if (!(parameter[j].size() == 1 && parameter[j][0].type == LST)) {
+						if (cnt == var_cnt) {
+							auto ret = this->ExecuteLine(parameter[j], line);
+							if (!ret.memory) {
+								delete ret.var;
+							}
+							else {
+								*(ret.var) = data;
+							}
+							var_cnt++;
+							break;
+						}
+						cnt++;
+					}
+				}
+				data.clear();
 			}
 		}
 		else {
@@ -234,6 +282,10 @@ Value Calc(Variable* var1, Variable* var2, Factor &oper) {
 
 Value Interpreter::Calculate(Command& cmd, vector<Value>& value_list) {
 	Value ret;
+
+	if (value_list.size() == 1 && value_list[0].memory) {
+		return value_list[0];
+	}
 
 	stack<Factor> oper_stack; 
 	stack<Value> calculate_stack;
@@ -341,6 +393,9 @@ void Interpreter::Goto(Command* cmp, Command* pos, vector<Value>& value_list, in
 			if (v.var->GetBoolean()) {
 				go = true;
 			}
+			if (!v.memory) {
+				delete v.var;
+			}
 		}
 		if (go) {
 			line -= goto_cnt - 1;
@@ -360,6 +415,9 @@ void Interpreter::Goto(Command* cmp, Command* pos, vector<Value>& value_list, in
 			if (v.var->GetBoolean()) {
 				go = true;
 			}
+			if (!v.memory) {
+				delete v.var;
+			}
 		}
 		if (go) {
 			Value v = this->Calculate(*pos, value_list);
@@ -367,7 +425,9 @@ void Interpreter::Goto(Command* cmp, Command* pos, vector<Value>& value_list, in
 			if (line < 0) {
 				InterpreterError(9);
 			}
-			delete v.var;
+			if (!v.memory) {
+				delete v.var;
+			}
 		}
 		else {
 			line++;
@@ -379,10 +439,10 @@ Value Interpreter::ExecuteLine(Command cmd, int &line) {
 	vector<Value> var_list;
 	this->GetValueList(var_list, cmd);
 
-	/*for (int i = 0; i < cmd.size(); i++) {
-		wcout << "[" << cmd[i].type << ":" << cmd[i].data << "]";
-	}
-	cout << endl;*/
+	//for (int i = 0; i < cmd.size(); i++) {
+	//	wcout << "[" << cmd[i].type << ":" << cmd[i].data << "]";
+	//}
+	//cout << endl;
 
 	Command send1, send2;
 	int goto_cnt = 0;
@@ -421,8 +481,8 @@ Value Interpreter::ExecuteLine(Command cmd, int &line) {
 	}
 
 	Value ret;
-	ret.memory = true;
-	ret.var = new Variable();
+	ret.memory = false;
+	ret.var = nullptr;
 
 	switch(type) {
 		case NUL:
@@ -435,6 +495,10 @@ Value Interpreter::ExecuteLine(Command cmd, int &line) {
 			this->Goto(&send1, &send2, var_list, goto_cnt, line);
 			line--;
 			break;
+	}
+
+	if (!ret.var) {
+		ret.var = new Variable();
 	}
 	
 	//print calculation process
@@ -461,7 +525,10 @@ Value Interpreter::ExecuteLine(Command cmd, int &line) {
 void Interpreter::Execute(Code& code) {
 	//Step
 	for (int i = 0; i < code.size(); i++) {
+		err_line = i + 1;
 		Value ret = ExecuteLine(code[i], i);
-		delete ret.var;
+		if (!ret.memory) {
+			delete ret.var;
+		}
 	}
 }

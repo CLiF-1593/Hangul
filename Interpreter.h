@@ -13,7 +13,7 @@ private:
 	map<CodeString, vector<Variable>> lst;
 
 	Value ExecuteLine(Command cmd, int &line);
-	Value GetValue(Command& cmd, int pos);
+	Value GetValue(Command& cmd, int &pos);
 	void GetValueList(vector<Value> &var_list, Command& cmd);
 	Value Function(Command& cmd, int &pos);
 	Value Calculate(Command &cmd, vector<Value> &value_list);

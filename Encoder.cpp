@@ -113,5 +113,5 @@ map<CodeUnit, Factor> word_table = {
 	{ L'¤¡',		{GTO, L"G"} },
 	{ L'?',		{BSZ, L"S"} },
 	{ L'!',		{FTN, L"F"} },
-	{ L';',		{FTN, L"f"} }
+	{ L';',		{FTN, L"f"} },
 };
