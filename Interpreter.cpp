@@ -8,7 +8,6 @@
 
 extern int err_line;
 
-//#define LOC L"D:\\Development\\ProgrammingProject\\Tool\\Hangul\\ExternalFunctions\\PreFunctionSets\\"
 //#define LOC wstring(_wgetenv(L"APPDATA")) + L"\\Hangul\\ExternalFunctions\\"
 #define LOC L"ExternalFunctions\\"
 
