@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 	encoder.EncodeFile(argv[1]/*"code.txt"*/, code);
-	encoder.PrintRawCode(code);
+	//encoder.PrintRawCode(code);
 	Interpreter interpreter;
 	interpreter.Execute(code);
 	return 0;
