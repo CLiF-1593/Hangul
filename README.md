@@ -3,3 +3,6 @@
    
 > 한글이라는 언어는 난해한 프로그래밍 언어로,    
 > 우리가 채팅을 할 때 자음과 모음으로 대화하는 것에서 착안하여, 마친 대화하듯이 프로그래밍을 할 수 있는 언어입니다.   
+   
+### 한글 언어에 대한 설명
+https://github.com/CLiF-1593/HangulVirtualMachine/blob/master/%ED%95%9C%EA%B8%80.pdf
