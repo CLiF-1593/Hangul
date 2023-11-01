@@ -17,9 +17,3 @@ public:
 main 함수는 라이브러리 내부에 포함되므로, 작성할 필요가 없습니다.      
 Hangul을 위해 구현된 Variable 타입으로 반환값을 전달할 수 있습니다.      
 함수의 Parameter 값은 Hangul class에 정의된 parameter_value와 parameter_list에 들어있습니다.        
-
-### Hangul Virtual Machine (HVM)
-> 한글 인터프리터        
-> https://github.com/CLiF-1593/HangulVirtualMachine
-
-### License : MIT License
