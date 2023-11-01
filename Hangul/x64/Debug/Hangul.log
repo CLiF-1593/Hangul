@@ -1,0 +1,4 @@
+﻿  Source.cpp
+D:\Development\ProgrammingProject\Tool\Hangul\Hangul\Hangul\Source.cpp(83,11): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\Development\ProgrammingProject\Tool\Hangul\Hangul\Hangul\Source.cpp(97,11): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  Hangul.vcxproj -> D:\Development\ProgrammingProject\Tool\Hangul\Hangul\x64\Debug\Hangul.exe
