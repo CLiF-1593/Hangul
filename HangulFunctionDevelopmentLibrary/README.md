@@ -1,6 +1,5 @@
 # Hangul Function Development Library
-이 프로젝트는 2022년도 IDEV 연구회 프로젝트로 진행되었습니다.   
-   
+
 > 한글(.hangul)에서 사용 가능한 함수를 제작할 수 있는      
 > 함수 제작 C++ 라이브러리 입니다.      
 
