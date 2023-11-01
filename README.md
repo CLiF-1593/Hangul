@@ -1,4 +1,4 @@
-# Hangul Virtual Machine
+# Hangul
 이 프로젝트는 2022년도 IDEV 연구회 프로젝트로 진행되었습니다.   
    
 > 한글이라는 언어는 난해한 프로그래밍 언어로,    
