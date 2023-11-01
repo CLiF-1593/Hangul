@@ -16,6 +16,6 @@
 
 ### Hangul Function Development Library (HFDL)
 > 한글 프로그램에 활용 가능한 함수 제작용 C++ 라이브러리         
-> https://github.com/CLiF-1593/HangulFunctionDevelopmentLibrary/
+> [https://github.com/CLiF-1593/HangulFunctionDevelopmentLibrary/](https://github.com/CLiF-1593/Hangul/tree/main/HangulFunctionDevelopmentLibrary)https://github.com/CLiF-1593/Hangul/tree/main/HangulFunctionDevelopmentLibrary
 
 ### License : MIT License
