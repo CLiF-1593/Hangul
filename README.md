@@ -9,10 +9,10 @@
 [한글 (Hangul).pdf](https://github.com/CLiF-1593/Hangul/blob/main/%ED%95%9C%EA%B8%80.pdf)
    
 ### 예시 코드
-> 1. 두 수를 더하는 코드    
-> (https://github.com/CLiF-1593/HangulVirtualMachine/blob/master/code%20-%20addition.txt)   
+> 1. 두 수를 더하는 코드
+> (https://github.com/CLiF-1593/Hangul/blob/main/Examples/code%20-%20addition.txt)   
 > 2. 1부터 n까지 출력하는 코드    
-> (https://github.com/CLiF-1593/HangulVirtualMachine/blob/master/code%20-%201ton.txt)
+> (https://github.com/CLiF-1593/Hangul/blob/main/Examples/code%20-%201ton.txt)
 
 ### Hangul Function Development Library (HFDL)
 > 한글 프로그램에 활용 가능한 함수 제작용 C++ 라이브러리         
