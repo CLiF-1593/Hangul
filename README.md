@@ -6,7 +6,7 @@
 > 마치 대화하듯이 프로그래밍을 할 수 있는 언어입니다.   
    
 ### 한글 언어에 대한 설명
-https://github.com/CLiF-1593/HangulVirtualMachine/blob/master/%ED%95%9C%EA%B8%80.pdf
+[한글 (Hangul).pdf](https://github.com/CLiF-1593/Hangul/blob/main/%ED%95%9C%EA%B8%80.pdf)
    
 ### 예시 코드
 > 1. 두 수를 더하는 코드    
